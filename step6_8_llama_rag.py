@@ -1,6 +1,7 @@
 """
 Step 6-8: Groq Cloud Integration with RAG Pipeline
 Optimized for CitizenQuery.streamlit.app
+UPDATED: Uses current Groq models (Feb 2026)
 """
 
 from typing import List, Dict
@@ -16,15 +17,21 @@ class ConstitutionRAG:
         self.vector_db = vector_db
         self.llm_type = llm_type # We keep this as 'ollama' to avoid breaking other files
         
-        # Groq Cloud Settings
-        self.model_name = "mistral-saba-24b" 
+        # Groq Cloud Settings - UPDATED to use current models
+        # Options as of Feb 2026:
+        # - "llama-3.3-70b-versatile" (RECOMMENDED - Fast & High Quality)
+        # - "llama-3.1-70b-versatile" (Alternative)
+        # - "mixtral-8x7b-32768" (Good for long context)
+        # - "llama-3.1-8b-instant" (Fastest, smaller model)
+        
+        self.model_name = "llama-3.3-70b-versatile"
         self.api_url = "https://api.groq.com/openai/v1/chat/completions"
         
         # Retrieve API Key safely
         try:
             self.api_key = st.secrets["GROQ_API_KEY"]
         except:
-            # Fallback for local testing only
+            # Fallback for local testing only (NEVER commit real API keys!)
             self.api_key = "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"
 
     def retrieve_context(self, query: str, k: int = 3) -> tuple[List[Dict], str]:
@@ -84,6 +91,9 @@ ANSWER:"""
                 return response.json()['choices'][0]['message']['content'].strip()
             elif response.status_code == 401:
                 return "Error 401: Invalid API Key. Check your Streamlit Secrets."
+            elif response.status_code == 400:
+                error_detail = response.json().get('error', {}).get('message', 'Unknown error')
+                return f"Error 400: {error_detail}\n\nTip: Check if the model name is correct in step6_8_llama_rag.py"
             else:
                 return f"Groq Error {response.status_code}: {response.text}"
                 
