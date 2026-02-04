@@ -130,7 +130,6 @@ def main():
         
         st.subheader("📚 Example Questions")
         example_questions = [
-            "What are the fundamental rights?",
             "What does the Preamble say?",
             "Can Parliament amend the Constitution?",
             "What is Right to Equality?",
@@ -155,7 +154,7 @@ def main():
         question = st.text_input(
             "🔍 Ask your question:",
             value=default_question,
-            placeholder="E.g., What is Article 21 of the Indian Constitutio?"
+            placeholder="E.g., what are my rights"
         )
     
     with col2:
