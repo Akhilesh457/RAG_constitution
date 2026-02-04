@@ -2,7 +2,7 @@
 langchain
 langchain-community
 sentence-transformers
-faiss-cpu
+faiss-cpu>=1.9.0
 
 # PDF Processing
 pypdf2
