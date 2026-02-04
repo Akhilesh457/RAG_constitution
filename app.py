@@ -19,39 +19,39 @@ st.set_page_config(
 # Replace the existing st.markdown block for CSS with this:
 st.markdown("""
     <style>
-    /* Main Header with consistent Indian Flag Gradient */
+    /* Main Header - Fixed the dark middle color to White */
     .main-header {
         font-size: 3rem;
         font-weight: 800;
         text-align: center;
         padding: 1.5rem;
-        background: linear-gradient(90deg, #FF9933 10%, #121212 50%, #138808 90%);
+        background: linear-gradient(90deg, #FF9933 10%, #FFFFFF 50%, #138808 90%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         margin-bottom: 0;
     }
     
-    /* Answer Box - High Contrast */
+    /* Answer Box - High Contrast stays white for readability */
     .answer-box {
         background-color: #ffffff;
-        color: #1a1a1a !important; /* Forces dark text */
+        color: #1a1a1a !important; 
         padding: 20px;
         border-radius: 10px;
         border-left: 8px solid #FF9933;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.3);
         font-size: 1.1rem;
         line-height: 1.6;
         margin-bottom: 25px;
     }
 
-    /* Source Cards - Better Visibility */
+    /* Source Cards - Slightly lightened background for dark mode compatibility */
     .source-box {
-        background-color: #f8f9fa;
-        color: #333333 !important; /* Forces dark text */
+        background-color: #f0f2f6;
+        color: #1a1a1a !important; 
         padding: 15px;
         border-radius: 8px;
         border: 1px solid #dee2e6;
-        height: 100%; /* Ensures uniform height in columns */
+        height: 100%;
         transition: transform 0.2s;
     }
     
@@ -60,14 +60,18 @@ st.markdown("""
         transform: translateY(-2px);
     }
 
-    /* Typography fixes for cards */
     .source-box strong { color: #d9534f; font-size: 1rem; }
-    .source-box small { color: #666666; display: block; margin-top: 5px; }
+    .source-box small { color: #444444; display: block; margin-top: 5px; }
     
-    /* Make Streamlit buttons more vibrant */
     .stButton>button {
         border-radius: 20px;
         border: 1px solid #138808;
+        background-color: transparent;
+        color: white;
+    }
+    .stButton>button:hover {
+        background-color: #138808;
+        color: white;
     }
     </style>
     """, unsafe_allow_html=True)
