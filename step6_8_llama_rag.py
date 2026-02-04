@@ -45,7 +45,7 @@ class ConstitutionRAG:
     def _init_ollama(self, model_name: str):
         """Initialize Ollama model and test connection"""
         self.ollama_model = model_name
-        self.ollama_url = "http://localhost:11434/api/generate"
+        self.ollama_url = "https://api.groq.com/openai/v1/chat/completions"
         
         try:
             # Short timeout for initial check
