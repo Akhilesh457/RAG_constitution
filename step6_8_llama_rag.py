@@ -43,24 +43,45 @@ class ConstitutionRAG:
         )
     
     def _init_ollama(self, model_name: str):
-        """Initialize Ollama model and test connection"""
-        self.ollama_model = model_name
-        self.ollama_url = "https://api.groq.com/openai/v1/chat/completions"
+        """Initialize Groq connection (formerly Ollama logic)"""
+        self.model_name = "mistral-saba-24b" # Groq's best Mistral variant
+        self.api_url = "https://api.groq.com/openai/v1/chat/completions"
+        
+        # Use Streamlit secrets for the API key to keep it safe
+        try:
+            self.api_key = st.secrets["GROQ_API_KEY"]
+        except:
+            # Fallback for local testing if secrets aren't set
+            self.api_key = "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"
+
+    def generate_answer(self, prompt: str) -> str:
+        """Generate answer using Groq Cloud API"""
+        headers = {
+            "Authorization": f"Bearer {self.api_key}",
+            "Content-Type": "application/json"
+        }
+        
+        # Groq uses the OpenAI-style 'messages' format, not a single 'prompt' string
+        data = {
+            "model": self.model_name,
+            "messages": [
+                {"role": "system", "content": "You are a legal assistant specializing in the Indian Constitution."},
+                {"role": "user", "content": prompt}
+            ],
+            "temperature": 0.1,
+            "max_tokens": 1024
+        }
         
         try:
-            # Short timeout for initial check
-            response = requests.post(
-                self.ollama_url,
-                json={"model": model_name, "prompt": "hi", "stream": False},
-                timeout=5
-            )
+            response = requests.post(self.api_url, headers=headers, json=data, timeout=30)
+            
             if response.status_code == 200:
-                print(f"✅ Connected to Ollama with model: {model_name}")
+                return response.json()['choices'][0]['message']['content'].strip()
             else:
-                print(f"⚠️ Ollama returned status {response.status_code}. Check if '{model_name}' is pulled.")
+                return f"Groq Error {response.status_code}: {response.text}"
+                
         except Exception as e:
-            print(f"⚠️ Connection failed: {e}. Ensure 'ollama serve' is running.")
-    
+            return f"API Connection Error: {str(e)}"    
     def retrieve_context(self, query: str, k: int = 3) -> tuple[List[Dict], str]:
         """Retrieve relevant chunks and format for LLM"""
         results = self.vector_db.search(query, k=k)
