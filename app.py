@@ -155,7 +155,7 @@ def main():
         question = st.text_input(
             "🔍 Ask your question:",
             value=default_question,
-            placeholder="E.g., What is Article 21 of the Indian Constitution?"
+            placeholder="E.g., What is Article 21 of the Indian Constitutio?"
         )
     
     with col2:
